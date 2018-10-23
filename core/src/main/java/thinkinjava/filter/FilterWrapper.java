@@ -11,24 +11,24 @@ import thinkinjava.rpc.Response;
  */
 public class FilterWrapper implements Invoker {
 
-    private Filter next;
+    private Filter filter;
 
-    private Invoker invoker;
+    private Invoker next;
 
     private ServiceConfig config;
 
-    public FilterWrapper(Filter next, Invoker invoker) {
+    public FilterWrapper(Filter filter, Invoker next) {
         this.next = next;
-        this.invoker = invoker;
-        this.config = invoker.getConfig();
+        this.filter = filter;
+        this.config = next.getConfig();
     }
 
 
     public Response invoke(Request args) {
-        if (next != null) {
-            return next.filter(invoker, args);
+        if (filter != null) {
+            return filter.filter(next, args);
         } else {
-            return invoker.invoke(args);
+            return next.invoke(args);
         }
     }
 
